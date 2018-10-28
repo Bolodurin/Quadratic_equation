@@ -162,7 +162,7 @@ int SolveLinear(double b, double c, double* px1)
     if (b == 0)
     {
         if (c == 0) nRoots = INFINIT_NUMBER_OF_ROOT;
-        else  nRoots = NO_ROOTS;
+        else        nRoots = NO_ROOTS;
     }
     else
     {

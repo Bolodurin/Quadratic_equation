@@ -52,12 +52,23 @@ int main()
         return 1;
     }
     double a = NAN, b = NAN, c = NAN;
+    
+/*
+    Весь этот цикл хорошо бы выкинуть в функцию, которая прочитает 
+    коэффициенты и вернет их.
+ */
     while (1)
     {
         int num_args = scanf("%lg %lg %lg", &a, &b, &c);
         if(num_args != 3)
         {
             printf("ERROR: not double arguments");
+/*
+    Вот тут то самое невезение, что я прислал на скрине)
+    нужна строчка
+
+    fflush(stdin);
+ */
             continue;
         }
         break;
@@ -92,13 +103,10 @@ int SolveSquare(double a, double b, double c, double* px1, double* px2)
 {
     int nRoots = 0;
     double quad_discriminant = NAN;
-    if(!std::isfinite(a) &&
-        !std::isfinite(b) && !std::isfinite(c))
+    if (!std::isfinite(a) &&
+        !std::isfinite(b) && 
+        !std::isfinite(c))
         std::cout << "Args in SolveSquare isn't finite!";
-    /*assert(isfinite(a));
-    assert(isfinite(b));
-    assert(isfinite(c));*/
-
 
     assert(px1 != NULL);
     assert(px2 != NULL);
@@ -110,8 +118,13 @@ int SolveSquare(double a, double b, double c, double* px1, double* px2)
         if (!std::isfinite(quad_discriminant))
         {
             printf("ERROR: very big discriminant\n");
+/*
+    Возвращаешь NULL в функции, возвращающей int. GCC это кушает 
+    с трудом, да и вообще не феншуйно
+ */
             return NULL;
         }
+
         if(quad_discriminant > 0)
         {
             int discr = sqrt(quad_discriminant);
@@ -125,10 +138,14 @@ int SolveSquare(double a, double b, double c, double* px1, double* px2)
             nRoots = ONE_ROOT;
         }
         else if(quad_discriminant < 0)  nRoots = NO_ROOTS;
-        else  nRoots = ERROR_IN_ROOTS;
+        else                            nRoots = ERROR_IN_ROOTS;
 
         return nRoots;
     }
+/*
+    Недокументированная -1. Лучше константу, накрайняк в документации
+    прописать
+ */
     return -1;
 }
 
@@ -137,7 +154,11 @@ int SolveLinear(double b, double c, double* px1)
     assert(std::isfinite(b));
     assert(std::isfinite(c));
     assert(px1 != NULL);
-    int nRoots = 4;
+
+/*
+    Почему 4?..
+ */
+    int nRoots = 4; 
     if (b == 0)
     {
         if (c == 0) nRoots = INFINIT_NUMBER_OF_ROOT;

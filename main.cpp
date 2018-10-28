@@ -7,11 +7,11 @@
 
 
 #define INFINIT_NUMBER_OF_ROOT 3
-#define TEST_NUM 8
-#define ONE_ROOT 1
-#define TWO_ROOTS 2
-#define NO_ROOTS 0
-#define ERROR_IN_ROOTS -1
+#define TEST_NUM               8
+#define ONE_ROOT               1
+#define TWO_ROOTS              2
+#define NO_ROOTS               0
+#define ERROR_IN_ROOTS         -1
 
 
 /*!
@@ -45,12 +45,24 @@ int main()
     printf("# Square Eq Solver v.0.1a\n");
     printf("# Enter a b c: ");
 
-    double a = NAN, b = NAN, c = NAN;
-    int num_args = scanf("%lg %lg %lg", &a, &b, &c);
-    if(num_args != 3)
+    int test = Tests();
+    if (test)
     {
-        printf("ERROR: not double arguments");
+        printf("Results of tests is bad");
+        return 1;
     }
+    double a = NAN, b = NAN, c = NAN;
+    while (1)
+    {
+        int num_args = scanf("%lg %lg %lg", &a, &b, &c);
+        if(num_args != 3)
+        {
+            printf("ERROR: not double arguments");
+            continue;
+        }
+        break;
+    }
+
 
     double x1 = NAN, x2 = NAN;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
@@ -73,11 +85,6 @@ int main()
         return 1;
         break;
     }
-    int test = Tests();
-    if (test)
-    {
-        printf("Results of tests is bad");
-    }
     return 0;
 }
 
@@ -96,12 +103,15 @@ int SolveSquare(double a, double b, double c, double* px1, double* px2)
     assert(px1 != NULL);
     assert(px2 != NULL);
     if(a == 0)
-    {
         return SolveLinear(b, c, px1);
-    }
     else
     {
         quad_discriminant = b*b - 4*a*c;
+        if (!std::isfinite(quad_discriminant))
+        {
+            printf("ERROR: very big discriminant\n");
+            return NULL;
+        }
         if(quad_discriminant > 0)
         {
             int discr = sqrt(quad_discriminant);
@@ -114,8 +124,8 @@ int SolveSquare(double a, double b, double c, double* px1, double* px2)
             *px1 = (-b)/(2*a);
             nRoots = ONE_ROOT;
         }
-        else if(quad_discriminant < 0){nRoots = NO_ROOTS;}
-        else{nRoots = ERROR_IN_ROOTS;}
+        else if(quad_discriminant < 0)  nRoots = NO_ROOTS;
+        else  nRoots = ERROR_IN_ROOTS;
 
         return nRoots;
     }
@@ -130,8 +140,8 @@ int SolveLinear(double b, double c, double* px1)
     int nRoots = 4;
     if (b == 0)
     {
-        if (c == 0){nRoots = INFINIT_NUMBER_OF_ROOT;}
-        else{nRoots = NO_ROOTS;}
+        if (c == 0) nRoots = INFINIT_NUMBER_OF_ROOT;
+        else  nRoots = NO_ROOTS;
     }
     else
     {
